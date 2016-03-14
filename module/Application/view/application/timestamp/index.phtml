@@ -1,0 +1,13 @@
+<?php
+
+	if($_GET['api_key'] !== 'synaptop') {
+		$err = json_encode(array('error' => true, 'message' => 'invalid api key.'));
+		echo $err;
+
+		return;
+	}
+	$timeStamp = array('Timestamp' => time());
+	echo json_encode($timeStamp);
+
+?>
+

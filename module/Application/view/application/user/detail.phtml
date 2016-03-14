@@ -1,0 +1,57 @@
+<?php
+
+	$user_id = $transactions_user_id;
+
+	if($_GET['api_key'] !== 'synaptop') {
+		$err = json_encode(array('error' => true, 'message' => 'invalid api key.'));
+		echo $err;
+
+		return;
+	}
+
+	$adapter = new Zend\Db\Adapter\Adapter(array(
+		'driver' => 'Mysqli',
+		'database' => 'synaptop',
+		'username' => 'root',
+		'password' => 'root'
+	));
+
+	use Zend\Db\Adapter\Driver\ResultInterface;
+	use Zend\Db\ResultSet\ResultSet;
+
+	$stmt = $adapter->createStatement('SELECT product_id, user_id, amount FROM transaction where user_id='.$user_id);
+	$stmt->prepare();
+	$result = $stmt->execute();
+
+
+	$ret = array();
+	$ret[] = $result->current();
+	while(true) {
+		$data = $result->next();
+		if($data != null) {
+			$ret[] = $data;	
+		} else {
+			break;	
+		}
+	}
+	echo json_encode($ret);
+/*
+	if ($result instanceof ResultInterface && $result->isQueryResult()) {
+	    $resultSet = new ResultSet;
+	    $resultSet->initialize($result);
+				
+	    foreach ($resultSet as $row) {
+			echo json_encode($row);		
+		}
+	}
+/*
+	echo json_encode($result->toArray();
+
+	$ret = $adapter->query('select * from `transaction` where `id` = 1');//, array((int)$_GET['transaction_id']));
+	var_dump($ret->toArray());
+
+	echo json_encode($transaction);
+*/
+
+?>
+
